@@ -8,7 +8,16 @@ public section.
     types:
         ty_r_matnr type range of matnr.
 
+    INTERFACES:
+        if_amdp_marker_hdb.
+
     class-methods:
+
+        amdp_stvarv_param_value
+            IMPORTING
+                VALUE(iv_param_name) TYPE string
+            RETURNING
+                VALUE(rv_result) TYPE string,
 
         get_matnr_range
             importing
@@ -132,5 +141,27 @@ CLASS ZCL_STVARV IMPLEMENTATION.
         endloop.
 
     endmethod.
+
+    METHOD amdp_stvarv_param_value
+        BY DATABASE FUNCTION
+        FOR HDB LANGUAGE SQLSCRIPT
+        OPTIONS READ-ONLY
+        USING
+            tvarvc
+        .
+
+        SELECT
+            max( low )
+        into
+            rv_result
+        from
+            tvarvc
+        WHERE
+            mandt = SESSION_CONTEXT('CLIENT') AND
+            name = :iv_param_name AND
+            type = 'P'
+            ;
+
+    ENDMETHOD.
 
 ENDCLASS.
