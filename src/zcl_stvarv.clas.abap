@@ -12,6 +12,8 @@ public section.
         if_amdp_marker_hdb.
 
     class-methods:
+        ZTF_STVARV_RANGE_AS_TABLE
+            for table function ZTF_STVARV_RANGE_AS_TABLE,
 
         amdp_stvarv_param_value
             IMPORTING
@@ -139,6 +141,25 @@ CLASS ZCL_STVARV IMPLEMENTATION.
             ENDIF.
 
         endloop.
+
+    endmethod.
+
+    METHOD ZTF_STVARV_RANGE_AS_TABLE
+        BY DATABASE FUNCTION
+        FOR HDB LANGUAGE SQLSCRIPT
+        OPTIONS READ-ONLY
+        USING
+            TVARVC
+        .
+
+        return
+            SELECT
+                mandt,
+                name as parametro,
+                low as valor
+            from
+                tvarvc
+            ;
 
     endmethod.
 
